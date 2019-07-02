@@ -1,4 +1,4 @@
-package SmartHome Hub;
+package SmartHomeHub;
 
 /**
  * Hello world!

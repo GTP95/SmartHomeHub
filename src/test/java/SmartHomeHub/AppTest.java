@@ -1,4 +1,4 @@
-package SmartHome Hub;
+package SmartHomeHub;
 
 import static org.junit.Assert.assertTrue;
 
