@@ -8,8 +8,7 @@ import java.net.Socket;
 import tools.JSONCreator;
 
 /**
- * @author Giacomo Tommaso Petrucci
- * This class is the entry point for the server
+ * This class is the entry point of the server
  */
 public class LaunchServer {
     private static int portNumber;

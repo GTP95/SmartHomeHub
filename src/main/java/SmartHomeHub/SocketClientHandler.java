@@ -11,6 +11,10 @@ import java.nio.file.Paths;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 
+/**
+ * This class handles the connection with the various devices
+ */
+
 public class SocketClientHandler implements Runnable {
     private Socket clientSocket;
     private BufferedReader in;
