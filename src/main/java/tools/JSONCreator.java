@@ -73,6 +73,13 @@ public final class JSONCreator {
         return string;
     }
 
+    public static String parseStringFiledFromJson(String json, String fieldName){
+        JsonParser parser = new JsonParser();
+        JsonObject obj = parser.parse(json).getAsJsonObject();
+        String fieldValue = obj.get(fieldName).getAsString();
+        return fieldValue;
+    }
+
     public static long parseLongFieldFromFile(String path, String fieldName) throws FileNotFoundException {
         JsonElement jelement = new JsonParser().parse(new FileReader(path));
         JsonObject jobject = jelement.getAsJsonObject();
