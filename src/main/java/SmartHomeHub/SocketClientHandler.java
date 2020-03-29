@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 
@@ -22,42 +23,44 @@ public class SocketClientHandler implements Runnable {
     private String deviceID;
     private String json;
     private File deviceDir;
+    private Date date;
 
-    public SocketClientHandler(Socket clientSocket) {
+    public SocketClientHandler(Socket clientSocket) throws IOException {
         this.clientSocket=clientSocket;
-        try {
+
             this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            this.writer= Files.newBufferedWriter(Paths.get(deviceID), Charset.forName("ASCII"), APPEND);    // TODO: move inside run and switch to using a folder
-        }
-        catch(java.io.IOException e){
-            System.err.println(e.getMessage());
-        }
+
+
+
     }
 
     @Override
     public void run() {
+        this.date=new Date();
         try{
             while(!in.ready()); //wait for input
             this.json=in.readLine();
             this.deviceID=JSONCreator.parseStringFiledFromJson(json, deviceID);
-            if(!Files.exists(Paths.get(deviceID))){ //If doesn't exixst a folder named after the device creates it
+          /*  if(!Files.exists(Paths.get(deviceID))){ //If doesn't exist a folder named after the device creates it
                 deviceDir=new File(deviceID);
                 deviceDir.mkdir();
-            }
+            }*/
         }
         catch (java.io.IOException e){
             System.err.println(e.getMessage());
         }
         while(true){
+            try {
+                if(in.ready()){
+                    json=in.readLine();
+                    Files.write(Paths.get(deviceDir+"/"+date.toString()), json.getBytes()); //creates a new file for each json received
+                    switch(deviceID){   //notifies the right thread that new data arrived TODO
+                        case "Wheater station":
 
-            try {   //TODO: rewrite
-                if (in.ready()) writer.write(in.readLine());
-                else if(clientSocket.isClosed()){   //save the file and exit
-                    writer.close();
-                    break;
+                    }
                 }
             } catch (IOException e) {
-               System.err.println(e.getMessage());
+                System.err.println(e.getMessage());
             }
 
         }

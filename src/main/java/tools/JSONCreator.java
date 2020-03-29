@@ -87,4 +87,11 @@ public final class JSONCreator {
         return number;
     }
 
+    public static float parseFloatFiledFromJson(String json, String fieldName){
+        JsonParser parser = new JsonParser();
+        JsonObject obj = parser.parse(json).getAsJsonObject();
+        float fieldValue = obj.get(fieldName).getAsFloat();
+        return fieldValue;
+    }
+
 }
