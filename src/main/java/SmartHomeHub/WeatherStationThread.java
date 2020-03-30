@@ -15,7 +15,7 @@ public class WeatherStationThread implements Runnable{
     private WeatherStationThread(int port) {
         this.port = port;
         this.response="<html><head><title>Stazione meteo</title></head>"+
-                "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">"+
+                "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"+
                 "Umidità: " + "In attesa dei dati<br>"+
                 "Temperatura: In attesa dei dati<br>"+
                 "Ultimo aggiornamento: non ho ancora ricevuto dati"+
