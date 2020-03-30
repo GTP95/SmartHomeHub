@@ -25,7 +25,7 @@ public class LaunchServer {
             ServerSocket serverSocket=new ServerSocket(portNumber);
             System.out.println("Server started on port " + portNumber);
 
-            Thread weatherStationThread=new Thread(new WeatherStationThread(1025));   //TODO: make port configurable
+            Thread weatherStationThread=new Thread(WeatherStationThread.getInstance(1025));   //TODO: make port configurable
             weatherStationThread.start();
 
             while (true) {

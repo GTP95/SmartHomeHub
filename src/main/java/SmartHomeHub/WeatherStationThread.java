@@ -1,23 +1,18 @@
 package SmartHomeHub;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import tools.JSONCreator;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+
 
 public class WeatherStationThread implements Runnable{
-   private volatile float humidity;
-   private volatile float temperature;
-   private BufferedWriter out;
    private int port;
-   private String lastUpdateTimestamp;
-   private String response;
+   private volatile String response;
+   private static WeatherStationThread ourInstance;
 
-    public WeatherStationThread(int port) {
+    private WeatherStationThread(int port) {
         this.port = port;
         this.response="<html><head><title>Stazione meteo</title></head>"+
                 "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">"+
@@ -27,15 +22,32 @@ public class WeatherStationThread implements Runnable{
                 "</body></html>";
     }
 
-    public void getJson(String json){
-        this.humidity=JSONCreator.parseFloatFiledFromJson(json, "humidity");
-        this.temperature=JSONCreator.parseFloatFiledFromJson(json, "temperature");
-        this.lastUpdateTimestamp=new Timestamp(System.currentTimeMillis()).toString();
+    public synchronized static WeatherStationThread getInstance(int port){
+        if(ourInstance!=null){
+            System.err.println("Warning: ignoring port parameter for WeatherStationThread.getInstance(int port) since object was already created.\nYou should call WeatherStationThread.getInstance() instead");
+            return ourInstance;
+        }
+        ourInstance=new WeatherStationThread(port);
+        return ourInstance;
+    }
+
+    public synchronized static WeatherStationThread getInstance(){
+        if(ourInstance==null){
+            System.err.println("Warning: creating (but not starting!) WeatherStationThread with default port 1025 since it hasn't been created yet.\nYou should call WeatherStationThread.getInstance(int port) instead");
+            ourInstance=new WeatherStationThread(1025);
+        }
+        return ourInstance;
+    }
+
+    public void receiveJson(String json){
+        float humidity=JSONCreator.parseFloatFiledFromJson(json, "humidity");
+        float temperature=JSONCreator.parseFloatFiledFromJson(json, "temperature");
+        String lastUpdateTimestamp=new Timestamp(System.currentTimeMillis()).toString();
         this.response="<html><head><title>Stazione meteo</title></head>"+
                 "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">"+
-                "Umidità: " + this.humidity+"%<br>"+
-                "Temperatura: " + this.temperature+"<br>"+
-                "Ultimo aggiornamento: " + this.lastUpdateTimestamp+
+                "Umidità: " + humidity+"%<br>"+
+                "Temperatura: " + temperature+"<br>"+
+                "Ultimo aggiornamento: " + lastUpdateTimestamp+
                 "</body></html>";
     }
 
