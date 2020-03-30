@@ -44,7 +44,7 @@ public class WeatherStationThread implements Runnable{
         float temperature=JSONCreator.parseFloatFiledFromJson(json, "temperature");
         String lastUpdateTimestamp=new Timestamp(System.currentTimeMillis()).toString();
         this.response="<html><head><title>Stazione meteo</title></head>"+
-                "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">"+
+                "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=charset=UTF-8\">"+
                 "Umidità: " + humidity+"%<br>"+
                 "Temperatura: " + temperature+"<br>"+
                 "Ultimo aggiornamento: " + lastUpdateTimestamp+
