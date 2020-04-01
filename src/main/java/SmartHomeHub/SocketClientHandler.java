@@ -54,9 +54,10 @@ public class SocketClientHandler implements Runnable {
                 if(in.ready()){
                     json=in.readLine();
                     Files.write(Paths.get(deviceDir+"/"+date.toString()), json.getBytes()); //creates a new file for each json received
-                    switch(deviceID){   //notifies the right thread that new data arrived TODO
+                    switch(deviceID){
                         case "Weather station":
                             WeatherStationThread.getInstance().receiveJson(json);
+                            System.out.println("Received data from Weather station");
                             break;
                         default:
                             System.err.println("Received data from unidentified device!");
