@@ -53,7 +53,7 @@ public class WeatherStationThread implements Runnable{
                 "</head>"+
                 "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"+
                 "Umidità: " + humidity+"%<br>"+
-                "Temperatura: " + temperature+"<br>"+
+                "Temperatura: " + temperature+"°C<br>"+
                 "Ultimo aggiornamento: " + lastUpdateTimestamp+
                 "</body></html>";
     }
