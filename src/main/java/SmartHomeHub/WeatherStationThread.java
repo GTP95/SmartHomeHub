@@ -17,7 +17,7 @@ public class WeatherStationThread implements Runnable{
         this.port = port;
         this.response="<html><head>"+
                 "<title>Stazione meteo</title>"+
-                "<META HTTP-EQUIV=”Refresh” CONTENT=”150; url=" + myURL+"\">"+
+                "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"150; url=" + myURL+"\">"+
                 "</head>"+
                 "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"+
                 "Umidità: " + "In attesa dei dati<br>"+
@@ -49,7 +49,7 @@ public class WeatherStationThread implements Runnable{
         String lastUpdateTimestamp=new Timestamp(System.currentTimeMillis()).toString();
         this.response="<html><head>"+
                 "<title>Stazione meteo</title>"+
-                "<META HTTP-EQUIV=”Refresh” CONTENT=”150; url=" + myURL+"\">"+
+                "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"150; url=" + myURL+"\">"+
                 "</head>"+
                 "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"+
                 "Umidità: " + humidity+"%<br>"+
