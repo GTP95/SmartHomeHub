@@ -10,11 +10,15 @@ import java.sql.Timestamp;
 public class WeatherStationThread implements Runnable{
    private int port;
    private volatile String response;
+   private static String myURL="meteofarlocco.tk";
    private static WeatherStationThread ourInstance;
 
     private WeatherStationThread(int port) {
         this.port = port;
-        this.response="<html><head><title>Stazione meteo</title></head>"+
+        this.response="<html><head>"+
+                "<title>Stazione meteo</title>"+
+                "<META HTTP-EQUIV=”Refresh” CONTENT=”150; url=" + myURL+"\">"+
+                "</head>"+
                 "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"+
                 "Umidità: " + "In attesa dei dati<br>"+
                 "Temperatura: In attesa dei dati<br>"+
@@ -43,7 +47,10 @@ public class WeatherStationThread implements Runnable{
         float humidity=JSONCreator.parseFloatFiledFromJson(json, "humidity");
         float temperature=JSONCreator.parseFloatFiledFromJson(json, "temperature");
         String lastUpdateTimestamp=new Timestamp(System.currentTimeMillis()).toString();
-        this.response="<html><head><title>Stazione meteo</title></head>"+
+        this.response="<html><head>"+
+                "<title>Stazione meteo</title>"+
+                "<META HTTP-EQUIV=”Refresh” CONTENT=”150; url=" + myURL+"\">"+
+                "</head>"+
                 "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"+
                 "Umidità: " + humidity+"%<br>"+
                 "Temperatura: " + temperature+"<br>"+
