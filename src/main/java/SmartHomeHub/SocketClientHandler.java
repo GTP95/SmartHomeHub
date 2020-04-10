@@ -40,7 +40,7 @@ public class SocketClientHandler implements Runnable {
         try{
             while(!in.ready()); //wait for input
             this.json=in.readLine();
-            this.deviceID=JSONCreator.parseStringFiledFromJson(json, deviceID);
+            this.deviceID=JSONCreator.parseStringFiledFromJson(json, "deviceID");
           /*  if(!Files.exists(Paths.get(deviceID))){ //If doesn't exist a folder named after the device creates it
                 deviceDir=new File(deviceID);
                 deviceDir.mkdir();
@@ -49,12 +49,7 @@ public class SocketClientHandler implements Runnable {
         catch (java.io.IOException e){
             System.err.println(e.getMessage());
         }
-        while(true){
-            try {
-                if(in.ready()){
-                    json=in.readLine();
-                    Files.write(Paths.get(deviceDir+"/"+date.toString()), json.getBytes()); //creates a new file for each json received
-                    switch(deviceID){
+        switch(deviceID){
                         case "Weather station":
                             WeatherStationThread.getInstance().receiveJson(json);
                             System.out.println("Received data from Weather station");
@@ -63,10 +58,5 @@ public class SocketClientHandler implements Runnable {
                             System.err.println("Received data from unidentified device!");
                     }
                 }
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-            }
-
-        }
-    }
 }
+
