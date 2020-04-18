@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import tools.JSONCreator;
 import java.sql.Timestamp;
+import static java.lang.Math.exp;
+import static java.lang.Math.log;
 
 
 public class WeatherStationThread implements Runnable{
@@ -46,21 +48,58 @@ public class WeatherStationThread implements Runnable{
     public void receiveJson(String json){
         float humidity=JSONCreator.parseFloatFiledFromJson(json, "humidity");
         float temperature=JSONCreator.parseFloatFiledFromJson(json, "temperature");
+        float heatIndex=JSONCreator.parseFloatFiledFromJson(json, "heat index");
+        double dewPoint=dewPoint(humidity, temperature);
         String lastUpdateTimestamp=new Timestamp(System.currentTimeMillis()).toString();
         this.response="<html><head>"+
                 "<title>Stazione meteo</title>"+
                 "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"150; url=" + myURL+"\">"+
-                "</head>"+
-                "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"+
-                "Umidità: " + humidity+"%<br>"+
-                "Temperatura: " + temperature+"°C<br>"+
-                "Ultimo aggiornamento: " + lastUpdateTimestamp+
+                "</head>" +
+                "<body>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">" +
+                "Umidità: " + humidity + "%<br>" +
+                "Temperatura: " + temperature + "°C<br>" +
+                "Temperatura percepita: " + heatIndex + "°C<br>" +
+                "Punto di rugiada (dew point): " + dewPoint + "°C (Potrebbe esserci un errore nella formula, non fidatevi. Se non funziona prendetevela con Wikipedia)<br>" +
+                "L'aria viene percepita come " + howAirFeels(dewPoint) + " (Idem come sopra)<br>" +
+                "Ultimo aggiornamento: " + lastUpdateTimestamp +
                 "</body></html>";
     }
 
+    private double dewPoint(float humidity, float temperature){  //formula explanation: https://en.wikipedia.org/wiki/Dew_point
+        double a, b ,c, d, dewPoint;
+        d = 234.5;
+        //switch/case can't operate on float...
+        if(temperature>=0 && temperature<=50){
+            a=6.1121;
+            b=17.368;
+            c=238.88;
+        }
+        else if(temperature>=-40 && temperature <0){
+            a = 6.1121;
+            b = 17.966;
+            c = 247.15;
+        }
+        else{   //These valuations provide a maximum error of 0.1%, for −30 °C ≤ T ≤ 35°C and 1% < RH < 100%
+            a = 6.112;
+            b = 17.62;
+            c = 243.12;
+        }
 
+        double psm=a*exp(b-temperature/d);
+        double gamma=log(humidity/100*exp((b-temperature/d)*(temperature/(c+temperature))));
+        dewPoint=c*gamma/(b-gamma);
 
+        return dewPoint;
+    }
 
+    private String howAirFeels(double dewPoint){ //https://www.best-microcontroller-projects.com/dht22.html
+        if(dewPoint<=13) return "secca";
+        if(dewPoint>13 && dewPoint<=16) return "confortevole";
+        if(dewPoint>16 && dewPoint<=18) return "abbastanza umida";
+        if(dewPoint>18 && dewPoint<=21) return "umida";
+        if(dewPoint>21 && dewPoint<=24) return "molto umida";
+        else return "troppo umida";     //dewPoint>24
+    }
 
     @Override
     public void run() {
