@@ -18,41 +18,40 @@ import static java.nio.file.StandardOpenOption.APPEND;
 
 public class SocketClientHandler implements Runnable {
     private Socket clientSocket;
-    private BufferedReader in;
-    private BufferedWriter writer;
+    private InputStreamReader in;
+    private PrintWriter out;
     private String deviceID;
     private String json;
-    private File deviceDir;
-    private Date date;
 
     public SocketClientHandler(Socket clientSocket) throws IOException {
         this.clientSocket=clientSocket;
 
-            this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-
-
+            this.in = new InputStreamReader(clientSocket.getInputStream());
+            this.out= new PrintWriter(clientSocket.getOutputStream(), true);
     }
 
     @Override
     public void run() {
-        this.date=new Date();
-        try{
-            while(!in.ready()); //wait for input
-            this.json=in.readLine();
+        System.out.print("Waiting for client to send data");
+        try{    //BufferedWriter with check for in.ready() didn't work, PrintWriter with check for in.ready() didn't work either, PrintWriter without check for in.ready() works. Didn't bother to try BufferedReader without in.ready()
+            char c;
+            String receivingJson="";
+            while(true){
+                c=(char)in.read();
+                receivingJson+=c;
+                if(c=='}') break;
+            }
+            this.json=receivingJson;
             this.deviceID=JSONCreator.parseStringFiledFromJson(json, "deviceID");
-          /*  if(!Files.exists(Paths.get(deviceID))){ //If doesn't exist a folder named after the device creates it
-                deviceDir=new File(deviceID);
-                deviceDir.mkdir();
-            }*/
         }
-        catch (java.io.IOException e){
+        catch (IOException e ){
             System.err.println(e.getMessage());
         }
         switch(deviceID){
                         case "Weather station":
-                            WeatherStationThread.getInstance().receiveJson(json);
                             System.out.println("Received data from Weather station");
+                            out.println("ok");
+                            WeatherStationThread.getInstance().receiveJson(json);
                             break;
                         default:
                             System.err.println("Received data from unidentified device!");
