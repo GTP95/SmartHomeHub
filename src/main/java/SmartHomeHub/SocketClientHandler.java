@@ -32,7 +32,7 @@ public class SocketClientHandler implements Runnable {
 
     @Override
     public void run() {
-        System.out.print("Waiting for client to send data");
+        System.out.println("Waiting for client to send data");
         try{    //BufferedWriter with check for in.ready() didn't work, PrintWriter with check for in.ready() didn't work either, PrintWriter without check for in.ready() works. Didn't bother to try BufferedReader without in.ready()
             char c;
             String receivingJson="";
@@ -51,6 +51,7 @@ public class SocketClientHandler implements Runnable {
                         case "Weather station":
                             System.out.println("Received data from Weather station");
                             out.println("ok");
+                            out.close();
                             WeatherStationThread.getInstance().receiveJson(json);
                             break;
                         default:

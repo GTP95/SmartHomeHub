@@ -10,9 +10,7 @@ public class HTTPSender {
         String line;
         BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         BufferedWriter out=new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-        while(!(line = reader.readLine()).isEmpty()){
-            System.out.println(line);
-        }
+        while(!(line = reader.readLine()).isEmpty());   //wait for client to send request, then ignore it completely and send the answer :D
         int contentLength=content.length();
         String httpAnswer="HTTP/1.0 200 OK\r\nDate: Fri, 31 Dec 1999 23:59:59 GMT\r\nContent-Type: text/html\r\nContent-Length:"+contentLength+"\r\n\r\n"+content;
         out.write(httpAnswer);
