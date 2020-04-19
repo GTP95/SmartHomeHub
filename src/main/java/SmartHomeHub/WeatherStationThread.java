@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import tools.JSONCreator;
-import java.sql.Timestamp;
 import static java.lang.Math.exp;
 import static java.lang.Math.log;
 
@@ -50,7 +49,7 @@ public class WeatherStationThread implements Runnable{
         float temperature=JSONCreator.parseFloatFiledFromJson(json, "temperature");
         float heatIndex=JSONCreator.parseFloatFiledFromJson(json, "heat index");
         double dewPoint=dewPoint(humidity, temperature);
-        String lastUpdateTimestamp=new Timestamp(System.currentTimeMillis()).toString();
+        String lastUpdateTimestamp=JSONCreator.parseStringFiledFromJson(json,"timestamp");
         this.response="<html><head>"+
                 "<title>Stazione meteo</title>"+
                 "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"150; url=" + myURL+"\">"+
