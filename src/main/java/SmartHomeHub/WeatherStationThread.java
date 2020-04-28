@@ -44,6 +44,10 @@ public class WeatherStationThread implements Runnable{
         return ourInstance;
     }
 
+    public String getResponse() {
+        return response;
+    }
+
     public void receiveJson(String json){
         float humidity=JSONCreator.parseFloatFiledFromJson(json, "humidity");
         float temperature=JSONCreator.parseFloatFiledFromJson(json, "temperature");
@@ -107,10 +111,11 @@ public class WeatherStationThread implements Runnable{
             System.out.println("Weather station webapp listening on port "+port);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-               HTTPSender.send(response, clientSocket);
+                Thread weatherStationClientHandler=new Thread(new WeatherStationClientHandler(clientSocket));
+                weatherStationClientHandler.start();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 }
