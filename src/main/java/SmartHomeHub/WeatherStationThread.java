@@ -16,14 +16,17 @@ public class WeatherStationThread implements Runnable{
 
     private WeatherStationThread(int port) {
         this.port = port;
-        this.response="<html><head>"+
-                "<title>Stazione meteo</title>"+
-                "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"150; url=" + myURL+"\">"+
-                "</head>"+
-                "<body>"+"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"+
-                "Umidità: " + "In attesa dei dati<br>"+
-                "Temperatura: In attesa dei dati<br>"+
-                "Ultimo aggiornamento: non ho ancora ricevuto dati"+
+        this.response=
+                "<html>"+
+                        "<head>"+
+                            "<title>Stazione meteo</title>"+
+                            "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"150; url=" + myURL+"\">"+
+                        "</head>"+
+                        "<body>"+
+                            "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"+
+                            "Umidità: " + "In attesa dei dati<br>"+
+                            "Temperatura: In attesa dei dati<br>"+
+                            "Ultimo aggiornamento: non ho ancora ricevuto dati"+
                 "</body></html>";
     }
 
@@ -54,17 +57,27 @@ public class WeatherStationThread implements Runnable{
         float heatIndex=JSONCreator.parseFloatFiledFromJson(json, "heat index");
         double dewPoint=dewPoint(humidity, temperature);
         String lastUpdateTimestamp=JSONCreator.parseStringFiledFromJson(json,"timestamp");
-        this.response="<html><head>"+
-                "<title>Stazione meteo</title>"+
-                "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"150; url=" + myURL+"\">"+
-                "</head>" +
-                "<body>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">" +
-                "Umidità: " + humidity + "%<br>" +
-                "Temperatura: " + temperature + "°C<br>" +
-                "Temperatura percepita: " + heatIndex + "°C<br>" +
-                "Punto di rugiada (dew point): " + dewPoint + "°C (Potrebbe esserci un errore nella formula, non fidatevi. Se non funziona prendetevela con Wikipedia)<br>" +
-                "L'aria viene percepita come " + howAirFeels(dewPoint) + " (Idem come sopra)<br>" +
-                "Ultimo aggiornamento: " + lastUpdateTimestamp +
+        this.response=
+                "<html>"+
+                    "<head>"+
+                        "<title>Stazione meteo</title>"+
+                        "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"150; url=" + myURL+"\">"+
+                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">"+
+                        "<style>html { font-family: 'Open Sans', sans-serif; display: block; margin: 0px auto; text-align: center;color: #444444;}"+
+                        "body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;}"+
+                        "p {font-size: 24px;color: #444444;margin-bottom: 10px;}"+
+                        "</style>"+
+                    "</head>" +
+                "<body>" +
+                        "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">" +
+                        "<div id=\"webpage\">"+
+                        "<h1>Meteo farlocco</h1>"+
+                        "&#x1f4a7 Umidità: " + humidity + "%<br>" +
+                        "&#x1f321 Temperatura: " + temperature + "°C<br>" +
+                        "&#x1f321 Temperatura percepita: " + heatIndex + "°C<br>" +
+                        "&#x1f4a6 Punto di rugiada (dew point): " + dewPoint + "°C (Potrebbe esserci un errore nella formula, non fidatevi. Se non funziona prendetevela con Wikipedia)<br>" +
+                        "&#x1f701 L'aria viene percepita come " + howAirFeels(dewPoint) + " (Idem come sopra)<br>" +
+                        "&#x1f550 Ultimo aggiornamento: " + lastUpdateTimestamp +
                 "</body></html>";
     }
 
